@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -14,8 +8,9 @@ datasource db {
 }
 
 model User {
-  id     String  @id @default(uuid())
-  hotels Hotel[]
+  id       String    @id @default(uuid())
+  hotels   Hotel[]
+  bookings Booking[]
 }
 
 //hotel schema
@@ -31,4 +26,24 @@ model Hotel {
   rating       Float    @default(0.0)
   totalReviews Int      @default(0)
   createdAt    DateTime @default(now())
+}
+
+model Booking {
+  id           String        @id @default(uuid())
+  userId       String
+  User         User          @relation(fields: [userId], references: [id])
+  roomId       String
+  hotelId      String
+  checkInDate  DateTime      @default(now())
+  checkOutDate DateTime      @default(now())
+  guests       Int
+  totalPrice   Decimal
+  status       BookingStatus @default(confirmed)
+  bookingDate  DateTime      @default(now())
+  cancelledAt  DateTime?
+}
+
+enum BookingStatus {
+  confirmed
+  cancelled
 }
