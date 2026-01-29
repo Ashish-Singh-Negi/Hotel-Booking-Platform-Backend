@@ -12,6 +12,6 @@ router.post("/auth/login", loginUserController);
 // hotels controllers
 router.post("/hotels/:hotelId/rooms", authMiddleware, addHotelRoomController);
 
-(router.get("/hotels/:hotelId", authMiddleware), getHotelDetailsController);
+router.get("/hotels/:hotelId", authMiddleware, getHotelDetailsController);
 
 export default router;
