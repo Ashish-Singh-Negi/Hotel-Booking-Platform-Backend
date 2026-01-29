@@ -2,6 +2,7 @@ import express from "express";
 import { loginUserController } from "../controllers/auth-controllers/loginUserController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { addHotelRoomController } from "../controllers/hotel-controllers/addHotelRoomController.js";
+import { getHotelDetailsController } from "../controllers/hotel-controllers/getHotelDetailsController.js";
 
 const router = express.Router();
 
@@ -10,5 +11,7 @@ router.post("/auth/login", loginUserController);
 
 // hotels controllers
 router.post("/hotels/:hotelId/rooms", authMiddleware, addHotelRoomController);
+
+(router.get("/hotels/:hotelId", authMiddleware), getHotelDetailsController);
 
 export default router;
