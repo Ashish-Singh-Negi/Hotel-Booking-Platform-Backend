@@ -8,3 +8,4 @@ tsconfig.tsbuildinfo
 
 /src/generated/prisma
 
+tsconfig.tsbuildinfo
