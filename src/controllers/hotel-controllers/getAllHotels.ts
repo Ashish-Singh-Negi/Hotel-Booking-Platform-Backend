@@ -7,47 +7,45 @@ export const getAllHotels = async(req:Request,res:Response)=>{
     try {
         const {city, country, minPrice, maxPrice, minRating} = req.query
 
-        const hotelWhereClause : Prisma.HotelWhereInput = {}
+        const hotelFilter : Prisma.HotelWhereInput = {}
 
         if(city){
-            hotelWhereClause.city = {
+            hotelFilter.city = {
                 equals:city as string,
                 mode:'insensitive'
             }
         }
         if(country){
-            hotelWhereClause.country = {
+            hotelFilter.country = {
                 equals:country as string,
                 mode:'insensitive'
             }
         }
         if(minRating){
-            hotelWhereClause.rating = {
+            hotelFilter.rating = {
                 gte:parseFloat(minRating as string)
             }
         }
 
         const roomPriceFilter : Prisma.RoomWhereInput = {}
-
+    if(minPrice || maxPrice){
+        roomPriceFilter.pricePerNight = {}
         if(minPrice){
-            roomPriceFilter.pricePerNight ={
-                gte:parseFloat(minPrice as string)
-            }
+            roomPriceFilter.pricePerNight.gte = parseFloat(minPrice as string)
+            
         }
         if(maxPrice){
-            roomPriceFilter.pricePerNight = {
-                lte:parseFloat(maxPrice as string)
-            }
+            roomPriceFilter.pricePerNight.lte = parseFloat(maxPrice as string)
         }
-
+    }
         if(minPrice || maxPrice){
-            hotelWhereClause.rooms = {
+            hotelFilter.rooms = {
                 some:roomPriceFilter
             }
         }
         
         const hotels = await prisma.hotel.findMany({
-            where:hotelWhereClause,
+            where:hotelFilter,
             select:{
                 id:true,
                 name:true,
@@ -74,7 +72,7 @@ export const getAllHotels = async(req:Request,res:Response)=>{
                 return Number(room.pricePerNight)
             })
 
-            const minPricePerNight = Math.min(...roomPrices)
+            const minPricePerNight = Number(Math.min(...roomPrices))
 
             const {rooms, ...hotelData} = hotel
 
@@ -85,9 +83,9 @@ export const getAllHotels = async(req:Request,res:Response)=>{
 
         })
 
-        return res.status(200).json(successResponse({
+        return res.status(200).json(successResponse(
             transformedHotels
-        }))
+        ))
         
 
         

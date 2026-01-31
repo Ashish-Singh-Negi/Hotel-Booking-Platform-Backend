@@ -22,18 +22,18 @@ export const createBookingController = async(req:Request, res:Response)=>{
         return res.status(404).json(errorResponse(ERROR_CODES.ROOM_NOT_FOUND))
     }
 
-    const hotel = await prisma.hotel.findFirst({
-        where:{
-            id:room.hotelId
-        }
-    })
-
-    const isOwnerSame = (hotel?.ownerId===req.user.id)
-    if(isOwnerSame){
+    // const hotel = await prisma.hotel.findFirst({
+    //     where:{
+    //         id:room.hotelId
+    //     }
+    // })
+    const isOwner = req.user.role === 'owner'
+    // const isOwnerSame = (hotel?.ownerId===req.user.id)
+    if(isOwner){
         return res.status(403).json(errorResponse(ERROR_CODES.FORBIDDEN))
     }
 
-    const pastDateBooking = checkInDate.getDate() > Date.now()
+    const pastDateBooking = checkInDate.getTime() < Date.now()
     if(pastDateBooking){
         return res.status(400).json(errorResponse(ERROR_CODES.INVALID_DATES))
     }
@@ -60,7 +60,7 @@ export const createBookingController = async(req:Request, res:Response)=>{
     }
 
     const nights = (new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24)
-    const totalPrice = nights * Number(room.pricePerNight)
+    const totalPrice = (nights * room.pricePerNight.toNumber())
 
     const booking = await prisma.booking.create({
         data:{

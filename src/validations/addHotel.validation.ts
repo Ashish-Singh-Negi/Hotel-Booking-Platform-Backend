@@ -2,9 +2,9 @@ import z from 'zod'
 
 export const addHotelSchema = z.object({
     name: z.string(),
-    description:z.string(),
+    description:z.string().optional(),
     city:z.string(),
     country:z.string(),
-    amenities:z.array(z.string())
+    amenities:z.array(z.string()).min(0).optional()
 })
 .strict()
