@@ -8,6 +8,7 @@ import { signupController } from "../controllers/auth-controllers/signupControll
 import { createHotelController } from "../controllers/hotel-controllers/createHotel.js";
 import { getAllHotels } from "../controllers/hotel-controllers/getAllHotels.js";
 import { createBookingController } from "../controllers/booking-controllers/createBookingController.js";
+import { cancelBookingController } from "../controllers/booking-controllers/cancelBookingController.js";
 
 const router = express.Router();
 
@@ -24,6 +25,7 @@ router.get("/hotels/:hotelId", authMiddleware, getHotelDetailsController);
 // booking controllers
 router.post('/bookings',authMiddleware,createBookingController)
 router.get("/bookings", authMiddleware, getHotelDetailsController);
+router.put('/bookings/:bookingId/cancel',authMiddleware,cancelBookingController)
 router.post("/reviews", authMiddleware, addHotelReviewController);
 
 export default router;
