@@ -20,11 +20,18 @@ export async function loginUserController(req: Request, res: Response) {
     // check user exist or not
     const userRecord = await prisma.user.findUnique({
       where: {
-        email: email,
+        email,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: true,
+        role: true,
       },
     });
     if (!userRecord) {
-      res.status(400).json(errorResponse(ERROR_CODES.INVALID_CREDENTIALS));
+      res.status(401).json(errorResponse(ERROR_CODES.INVALID_CREDENTIALS));
       return;
     }
 
@@ -34,7 +41,7 @@ export async function loginUserController(req: Request, res: Response) {
       userRecord.password,
     );
     if (!isPasswordCorrect) {
-      res.status(400).json(errorResponse(ERROR_CODES.INVALID_CREDENTIALS));
+      res.status(401).json(errorResponse(ERROR_CODES.INVALID_CREDENTIALS));
       return;
     }
 
