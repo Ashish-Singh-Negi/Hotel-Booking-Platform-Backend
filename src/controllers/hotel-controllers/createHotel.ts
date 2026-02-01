@@ -22,8 +22,8 @@ export const createHotelController = async (req: Request, res: Response) => {
         city,
         country,
         name,
-        amenities,
-        description,
+        amenities:amenities??{},
+        description:description??null,
         ownerId: req.user.id,
       },
     });

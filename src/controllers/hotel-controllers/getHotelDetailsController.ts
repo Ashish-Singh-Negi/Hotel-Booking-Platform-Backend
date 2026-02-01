@@ -1,17 +1,10 @@
 import type { Request, Response } from "express";
 import { errorResponse, successResponse } from "../../utils/responses.js";
 import { ERROR_CODES } from "../../utils/constants.js";
-import { getHotelDetailsSchema } from "../../validations/getHotel.validation.js";
 import { prisma } from "../../lib/prisma.js";
 
 async function getHotelDetailsController(req: Request, res: Response) {
-  const parsedParams = getHotelDetailsSchema.safeParse(req.params);
-  if (!parsedParams.success) {
-    res.status(400).json(errorResponse(ERROR_CODES.INVALID_REQUEST));
-    return;
-  }
-
-  const { hotelId } = parsedParams.data;
+  const hotelId = req.params.hotelId as string;
 
   try {
     // check hotel exist or not

@@ -6,7 +6,7 @@ import {
   addHotelRoomSchema,
 } from "../../validations/addHotelRoom.validation.js";
 import { prisma } from "../../lib/prisma.js";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
+import {  PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 
 async function addHotelRoomController(req: Request, res: Response) {
   // check user role is owner or not
